@@ -29,21 +29,46 @@ def generate(x, y, button_list, playing_field):
         for j in range(y):
             playing_field_machine[i].append(-1)
 
-            button_list[i].append(Button(playing_field, command=partial(update, i, j, button_list)))
+            button_list[i].append(Button(playing_field, command=partial(update, i, j, button_list), width=1))
             button_list[i][j].grid(column=i, row=j)
 
+def update_size(entry1, entry2, info_frame, error):
+    isNotError = True
+    try:
+        h_size = int(entry1.get())
+        v_size = int(entry2.get())
+    except ValueError:
+        error.config(text="Please enter a positive number")
+        isNotError = False
+    if isNotError:
+        generate(h_size, v_size, button_list, playing_field)
+        info_frame.destroy()
+        error.destroy()
+    
 root = Tk()
 
-player_frame = Frame(root)
+
+error_label = Label(root)
+info_frame = Frame(root)
 playing_field = Frame(root)
 
 button_list = []
 
-v_size = 20
-h_size = 19
+wightEntry = Entry(info_frame)
+wightEntry.insert(0, "Insert wight")
+wightEntry.grid(row=0, column=0)
 
-generate(h_size, v_size, button_list, playing_field)
+heightEntry = Entry(info_frame)
+heightEntry.insert(0, "Insert height")
+heightEntry.grid(column=1, row=0)
 
+generateButton = Button(info_frame, text="GENERATE", command=partial(update_size, wightEntry, heightEntry, info_frame, error_label))
+generateButton.grid(row=0, column=2)
+
+
+info_frame.pack()
 playing_field.pack()
-root.mainloop()
+error_label.pack()
 
+
+root.mainloop()
