@@ -1,9 +1,12 @@
 from tkinter import *
 from functools import partial
 
+# Declaring global variebles
 player = 0
 playing_field_machine = []
 
+    # Logical part
+# Updates playing field
 def update(i, j, button_list):
     global player
     global playing_field_machine
@@ -21,7 +24,8 @@ def player_move(button):
         text = "X"
     button.config(text=text, command=None)
 
-def generate(x, y, button_list, playing_field):
+# Generates a playing field
+def _generate(x, y, button_list, playing_field):
     global playing_field_machine
     for i in range(x):
         playing_field_machine.append([])
@@ -32,7 +36,8 @@ def generate(x, y, button_list, playing_field):
             button_list[i].append(Button(playing_field, command=partial(update, i, j, button_list), width=1))
             button_list[i][j].grid(column=i, row=j)
 
-def update_size(entry1, entry2, info_frame, error):
+# Generates varieble length playing field
+def generate(entry1, entry2, info_frame, error):
     isNotError = True
     try:
         h_size = int(entry1.get())
@@ -41,19 +46,20 @@ def update_size(entry1, entry2, info_frame, error):
         error.config(text="Please enter a positive number")
         isNotError = False
     if isNotError:
-        generate(h_size, v_size, button_list, playing_field)
+        _generate(h_size, v_size, button_list, playing_field)
         info_frame.destroy()
         error.destroy()
-    
+
+    # Graphical part 
 root = Tk()
 
-
+# Makes root part
 error_label = Label(root)
 info_frame = Frame(root)
 playing_field = Frame(root)
 
 button_list = []
-
+# Makes config screen
 wightEntry = Entry(info_frame)
 wightEntry.insert(0, "Insert wight")
 wightEntry.grid(row=0, column=0)
@@ -62,10 +68,10 @@ heightEntry = Entry(info_frame)
 heightEntry.insert(0, "Insert height")
 heightEntry.grid(column=1, row=0)
 
-generateButton = Button(info_frame, text="GENERATE", command=partial(update_size, wightEntry, heightEntry, info_frame, error_label))
+generateButton = Button(info_frame, text="GENERATE", command=partial(generate, wightEntry, heightEntry, info_frame, error_label))
 generateButton.grid(row=0, column=2)
 
-
+# Packs in tho root part
 info_frame.pack()
 playing_field.pack()
 error_label.pack()
