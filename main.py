@@ -31,16 +31,22 @@ def checkForWin(i, j, win_label):
         for dir2 in dir:
             x , y = dir2
             i , j = defaultCords
+            try:
+                while playing_field_machine[i][j] == player:
+                    count += 1
+                    i += y
+                    j += x
+                    if count > 5:
+                        win_label.config(text = f"Player {player} wins!!!")
+                        # Removes change of buttons 
+                        for x in range(len(playing_field_machine)):
+                            for y in range(len(playing_field_machine[0])):
+                                if playing_field_machine[x][y] == -1:
+                                    playing_field_machine[x][y] = None
+            except IndexError:
+                pass
 
-            while playing_field_machine[i][j] == player:
-                count += 1
-                i += y
-                j += x
-                # IndexError prevention
-                if i >= size_v or j >= size_h:
-                    break
-                if count > 5:
-                    win_label.config(text = f"Player {player} wins!!!")
+
                     
 def updatePlayingField(i, j, button_list, win):
     global player
@@ -54,12 +60,14 @@ def updatePlayingField(i, j, button_list, win):
         player = (player + 1) % 2
 
 
-def changeButtonText(button):
+def changeButtonText(button, empty=False):
     global player
     if player == 0:
         text = "O"
     else:
         text = "X"
+    if empty and not button.cget('text'):
+        text = " "
     button.config(text=text, command=None)
 
 def _generateBottomLevel(x, y, button_list, playing_field, winLabel):
@@ -69,8 +77,8 @@ def _generateBottomLevel(x, y, button_list, playing_field, winLabel):
         button_list.append([])
         for j in range(y):
             playing_field_machine[i].append(-1)
-
-            button_list[i].append(Button(playing_field, command=partial(updatePlayingField, i, j, button_list, winLabel), width=1))
+            button = Button(playing_field, command=partial(updatePlayingField, i, j, button_list, winLabel), width=1)
+            button_list[i].append(button)
             button_list[i][j].grid(column=i, row=j)
 
 def generateTopLevel(entry1, entry2, info_frame, errorLabel):
@@ -78,7 +86,7 @@ def generateTopLevel(entry1, entry2, info_frame, errorLabel):
     try:
         h_size = int(entry1.get())
         v_size = int(entry2.get())
-        if h_size < 0 or v_size < 0:
+        if h_size < 3 or v_size < 3:
             isNotError = False
     except ValueError:
         isNotError = False
