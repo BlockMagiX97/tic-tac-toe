@@ -21,6 +21,7 @@ def reset(frame, i, j, button_list, winLabel):
     winLabel.config(text="")
     resetButton.pack_forget()
     _generateBottomLevel(i, j, button_list, frame, winLabel)
+    
 def checkForWin(i, j, win_label):
     global playing_field_machine
     global player
@@ -42,6 +43,7 @@ def checkForWin(i, j, win_label):
 
     for dir in directions:
         count = 0
+        cells = []
 
         for dir2 in dir:
             x , y = dir2
@@ -49,10 +51,16 @@ def checkForWin(i, j, win_label):
             try:
                 while playing_field_machine[i][j] == player:
                     count += 1
+                    cells.append((i, j))
                     i += y
                     j += x
                     if count > 5:
-                        win_label.config(text = f"Player {player} wins!!!")
+                        if player == 0:
+                            msg = "O"
+                        else:
+                            msg = "X"
+                        win_label.config(text = f"Player {player + 1}  wins!!! Player {player + 1} is {msg}.")
+                        
                         # Removes change of buttons 
                         for x in range(len(playing_field_machine)):
                             for y in range(len(playing_field_machine[0])):
@@ -60,6 +68,9 @@ def checkForWin(i, j, win_label):
                                     playing_field_machine[x][y] = None
                         playing_field = button_list[x][y].master
                         root = playing_field.master
+                        for x in cells:
+                            y_cor, x_cor = x
+                            button_list[y_cor][x_cor].config(bg='red')
                         resetButton = Button(root, text="RESET", command=partial(reset, playing_field, size_v, size_h, button_list, win_label))
                         resetButton.pack()
                         
@@ -107,12 +118,13 @@ def generateTopLevel(entry1, entry2, info_frame, errorLabel):
     try:
         h_size = int(entry1.get())
         v_size = int(entry2.get())
-        if h_size < 0 or v_size < 0:
+        if h_size <= 0 or v_size <= 0:
             isNotError = False
     except ValueError:
         isNotError = False
     if isNotError:
         # Reusing errorLabel as victory anouncer
+        error_label.config(text="")
         _generateBottomLevel(h_size, v_size, button_list, playing_field, errorLabel)
         info_frame.destroy()
     else:
