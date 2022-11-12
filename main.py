@@ -5,12 +5,27 @@ from functools import partial
 player = 0
 playing_field_machine = []
 button_list = []
+resetButton = Button
 
+def reset(frame, i, j, button_list, winLabel):
+    global playing_field_machine
+    global resetButton
+    global player
 
+    player = 0
+    playing_field_machine = []
+    for x in button_list:
+        for button in x:
+            button.destroy()
+    button_list = []
+    winLabel.config(text="")
+    resetButton.pack_forget()
+    _generateBottomLevel(i, j, button_list, frame, winLabel)
 def checkForWin(i, j, win_label):
     global playing_field_machine
     global player
     global button_list
+    global resetButton
 
     # Adds relative cordinations
     directions = (
@@ -43,6 +58,12 @@ def checkForWin(i, j, win_label):
                             for y in range(len(playing_field_machine[0])):
                                 if playing_field_machine[x][y] == -1:
                                     playing_field_machine[x][y] = None
+                        playing_field = button_list[x][y].master
+                        root = playing_field.master
+                        resetButton = Button(root, text="RESET", command=partial(reset, playing_field, size_v, size_h, button_list, win_label))
+                        resetButton.pack()
+                        
+                        
             except IndexError:
                 pass
 
@@ -86,7 +107,7 @@ def generateTopLevel(entry1, entry2, info_frame, errorLabel):
     try:
         h_size = int(entry1.get())
         v_size = int(entry2.get())
-        if h_size < 3 or v_size < 3:
+        if h_size < 0 or v_size < 0:
             isNotError = False
     except ValueError:
         isNotError = False
@@ -103,6 +124,7 @@ root = Tk()
 # Declares root part
 error_label = Label(root)
 info_frame = Frame(root)
+resetButton = Button(root)
 playing_field = Frame(root)
 
 
