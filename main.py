@@ -1,3 +1,6 @@
+# Made by BlockMagiX97
+# Github account https://github.com/BlockMagiX97
+
 from tkinter import *
 from functools import partial
 
