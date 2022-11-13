@@ -7,7 +7,7 @@ playing_field_machine = []
 button_list = []
 resetButton = Button
 
-def reset(frame, i, j, button_list, winLabel):
+def resetPlayingField(frame, i, j, button_list, winLabel):
     global playing_field_machine
     global resetButton
     global player
@@ -55,6 +55,7 @@ def checkForWin(i, j, win_label):
                     cells.append((i, j))
                     i += y
                     j += x
+                    # Winning code
                     if count > 5:
                         if player == 0:
                             msg = "O"
@@ -62,7 +63,7 @@ def checkForWin(i, j, win_label):
                             msg = "X"
                         win_label.config(text = f"Player {player + 1}  wins!!! Player {player + 1} is {msg}.")
                         
-                        # Removes change of buttons 
+                        # Removes ability to change buttons 
                         for x in range(len(playing_field_machine)):
                             for y in range(len(playing_field_machine[0])):
                                 if playing_field_machine[x][y] == -1:
@@ -70,8 +71,9 @@ def checkForWin(i, j, win_label):
                         playing_field = button_list[x][y].master
                         root = playing_field.master
                         
-                        resetButton = Button(root, text="RESET", command=partial(reset, playing_field, size_v, size_h, button_list, win_label))
+                        resetButton = Button(root, text="RESET", command=partial(resetPlayingField, playing_field, size_v, size_h, button_list, win_label))
                         resetButton.pack()
+                        # Highlights the winning place
                         for x in cells:
                             y_cor, x_cor = x
                             button_list[y_cor][x_cor].config(bg='red')
