@@ -17,11 +17,12 @@ def reset(frame, i, j, button_list, winLabel):
     for x in button_list:
         for button in x:
             button.destroy()
-    button_list = []
+    button_list.clear()
     winLabel.config(text="")
-    resetButton.pack_forget()
+    resetButton.destroy()
+    resetButton = Button
     _generateBottomLevel(i, j, button_list, frame, winLabel)
-    
+
 def checkForWin(i, j, win_label):
     global playing_field_machine
     global player
@@ -68,12 +69,12 @@ def checkForWin(i, j, win_label):
                                     playing_field_machine[x][y] = None
                         playing_field = button_list[x][y].master
                         root = playing_field.master
+                        
+                        resetButton = Button(root, text="RESET", command=partial(reset, playing_field, size_v, size_h, button_list, win_label))
+                        resetButton.pack()
                         for x in cells:
                             y_cor, x_cor = x
                             button_list[y_cor][x_cor].config(bg='red')
-                        resetButton = Button(root, text="RESET", command=partial(reset, playing_field, size_v, size_h, button_list, win_label))
-                        resetButton.pack()
-                        
                         
             except IndexError:
                 pass
