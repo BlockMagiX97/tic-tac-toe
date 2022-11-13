@@ -3,7 +3,7 @@
 
 from tkinter import *
 from functools import partial
-
+import os, sys
 
 player = 0
 playing_field_machine = []
@@ -139,6 +139,12 @@ def generateTopLevel(entry1, entry2, info_frame, errorLabel):
 
 root = Tk()
 
+root.title('Tic-Tac-Toe')
+if "nt" == os.name:
+    root.wm_iconbitmap(bitmap = "icon.ico")
+else:
+    program_directory=sys.path[0]
+    root.iconphoto(True, PhotoImage(file=os.path.join(program_directory, "icon.png")))
 # Declares root part
 error_label = Label(root)
 info_frame = Frame(root)
