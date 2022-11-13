@@ -142,7 +142,8 @@ root = Tk()
 root.title('Tic-Tac-Toe')
 # Sets icon
 if "nt" == os.name:
-    root.wm_iconbitmap(bitmap = "icon.ico")
+    program_directory=sys.path[0]
+    root.wm_iconbitmap(bitmap = os.path.join(program_directory, "icon.ico"))
 else:
     program_directory=sys.path[0]
     root.iconphoto(True, PhotoImage(file=os.path.join(program_directory, "icon.png")))
